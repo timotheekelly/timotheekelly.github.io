@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Real-Time AI Fraud Detection — Spring Kafka, Kafka Streams, MongoDB, Vector Similarity. Deep dive by Tim Kelly."
+    />
+    <title>Real-Time AI Fraud Detection — Tim Kelly</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' fill='%23ECEAE6'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Courier New, Courier, monospace' font-size='96' font-weight='700' fill='%230F0F0F'%3ET%3C/text%3E%3C/svg%3E"
+    />
+  </head>
+
+  <body>
+    <div class="wrap project-wrap">
+      <header>
+        <h1>Real-Time AI Fraud Detection</h1>
+        <p class="subtitle">Spring Kafka · Kafka Streams · MongoDB · Vector Similarity</p>
+
+        <p class="links" aria-label="Page links">
+          <a href="../index.html">Home</a>
+          <span class="sep">|</span>
+          <a href="../projects.html">Projects</a>
+        </p>
+      </header>
+
+      <main>
+        <hr />
+
+        <div class="two-col">
+        <!-- LEFT COLUMN -->
+        <aside class="col-left">
+
+            <figure class="side-image">
+            <img
+                src="./assets/fraud-arch.png"
+                alt="Fraud detection pipeline architecture diagram"
+                loading="lazy"
+            />
+            <figcaption>
+                Stream → enrich → score → persist
+            </figcaption>
+            </figure>
+        
+            <hr class="divider" />
+        
+            <div class="side-block">
+            <p class="project-desc">
+                Streaming fraud detection pipeline using Spring Kafka and Kafka Streams.
+                Persists enriched events in MongoDB and uses vector similarity scoring as a signal.
+            </p>
+            <p class="project-stack">Spring · Kafka Streams · MongoDB · Vector Search</p>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="side-block">
+              <p><b>What it demonstrates</b></p>
+              <ul class="bullets">
+                <li>Event-driven ingestion</li>
+                <li>Stateful stream processing</li>
+                <li>Explainable scoring signals</li>
+                <li>Operational safety + observability</li>
+              </ul>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="side-block">
+              <p><b>Links</b></p>
+              <ul class="bullets">
+                <li>
+                  <a href="https://devnexus.com/events/real-time-fraud-detection-in-java-with-kafka-streams-vector-similarity"
+                     target="_blank" rel="noreferrer">DevNexus talk ↗</a>
+                </li>
+                <li>
+                  <a href="https://github.com/mongodb-developer/frauddetector"
+                     target="_blank" rel="noreferrer">Source code ↗</a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+          <!-- RIGHT COLUMN -->
+          <article class="col-right">
+            <p>
+              This system treats fraud as a real-time problem. If you detect something suspicious after the fact,
+              you’ve built an analytics dashboard, not a fraud pipeline.
+            </p>
+
+            <p>
+              The core flow is: transactions land in Kafka, are normalized into a stable schema, enriched with
+              deterministic features (velocity, rolling windows, flags), and scored in Kafka Streams. The output
+              is stored in MongoDB for investigations and queryable history.
+            </p>
+
+            <h2>Architecture</h2>
+            <hr class="divider" />
+
+            <p>
+              Kafka topics are partitioned by an explicit key (typically account, user, or card) so ordering and
+              state locality are intentional rather than accidental. Kafka Streams maintains rolling state per key
+              (for example: counts over the last N minutes) and emits enriched/scored events downstream.
+            </p>
+
+            <h2>Vector similarity as one signal</h2>
+            <hr class="divider" />
+
+            <p>
+              The project uses similarity scoring to compare events (or entities) against known suspicious patterns.
+              It is not “LLM magic”; it’s a retrieval signal that helps answer: does this look like something we’ve
+              seen before?
+            </p>
+
+            <p>
+              The practical constraint is cost. You don’t embed every transaction. Instead, you embed selectively:
+              high-risk events, high-value events, or stable entities (merchant/device/user) and reuse those vectors.
+            </p>
+
+            <h2>Operational notes</h2>
+            <hr class="divider" />
+
+            <p>
+              The pipeline is designed to fail clearly: explicit dead-lettering, predictable retries, and idempotent
+              writes. The output includes an audit trail of “why this was scored” so an investigator can justify a
+              decision later.
+            </p>
+
+            <p>
+              If you want to extend it, the next best step is adding a small “Run it locally” section (Docker compose
+              for Kafka + app), plus a single diagram showing topics, stream stages, and MongoDB collections.
+            </p>
+          </article>
+        </div>
+      </main>
+
+      <footer>
+        <small>© <span id="year"></span> Tim Kelly</small>
+      </footer>
+    </div>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

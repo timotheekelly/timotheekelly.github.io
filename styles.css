@@ -182,4 +182,56 @@
     margin-bottom: 10px;
   }
   
+  /* =========================
+   Two-column project pages
+   ========================= */
+
+.two-col {
+  display: grid;
+  grid-template-columns: 0.95fr 1.55fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 10px;
+}
+
+/* Left column blocks should feel like your project blocks */
+.col-left .side-block {
+  margin: 0;
+}
+
+.bullets {
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+}
+
+.bullets li {
+  margin: 6px 0;
+}
+
+/* Make sure long repo URLs don't break layout */
+.col-left a,
+.col-right a {
+  overflow-wrap: anywhere;
+}
+
+.project-wrap {
+  width: 58%;
+  max-width: 980px;
+}
+
+@media (max-width: 760px) {
+  .project-wrap {
+    width: 100%;
+  }
+}
+
+
+/* Mobile: collapse into one column */
+@media (max-width: 760px) {
+  .two-col {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
   
